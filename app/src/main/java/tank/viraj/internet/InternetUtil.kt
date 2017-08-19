@@ -46,18 +46,20 @@ class InternetUtil private constructor(private val application: Application) :
     }
 
     private fun registerBroadCastReceiver() {
-        val filter = IntentFilter()
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        if (broadcastReceiver == null) {
+            val filter = IntentFilter()
+            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
-        broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(_context: Context, intent: Intent) {
-                val extras = intent.extras
-                val info = extras.getParcelable<NetworkInfo>("networkInfo")
-                value = info.state == NetworkInfo.State.CONNECTED
+            broadcastReceiver = object : BroadcastReceiver() {
+                override fun onReceive(_context: Context, intent: Intent) {
+                    val extras = intent.extras
+                    val info = extras.getParcelable<NetworkInfo>("networkInfo")
+                    value = info.state == NetworkInfo.State.CONNECTED
+                }
             }
-        }
 
-        application.registerReceiver(broadcastReceiver, filter)
+            application.registerReceiver(broadcastReceiver, filter)
+        }
     }
 
     private fun unRegisterBroadCastReceiver() {
