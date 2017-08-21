@@ -11,17 +11,14 @@ import kotlinx.android.synthetic.main.activity.*
  */
 class MyActivity : LifecycleActivity() {
 
-    private lateinit var internetUtil: InternetUtil
+    private var myDataSource = MyDataSource()
     private lateinit var myViewModelFactory: MyViewModelFactory
-    private lateinit var myDataSource: MyDataSource
     private lateinit var myViewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity)
 
-        internetUtil = InternetUtil.Singleton.getInstance(application)
-        myDataSource = MyDataSource(internetUtil)
         myViewModelFactory = MyViewModelFactory(myDataSource)
         myViewModel = ViewModelProviders.of(this, myViewModelFactory).get(MyViewModel::class.java)
 
@@ -35,7 +32,7 @@ class MyActivity : LifecycleActivity() {
     }
 
     fun waitForInternet() {
-        internetUtil.observe(this, Observer {
+        InternetUtil.observe(this, Observer {
             status ->
             if (status ?: false) {
                 myViewModel.getData()

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by Viraj Tank, 15-08-2017.
  */
-class MyDataSource(val internetUtil: InternetUtil) {
+class MyDataSource {
 
     private var dataInFakeDatabase = ""
     private var numberOfNetworkCallsMade = 0
@@ -21,7 +21,7 @@ class MyDataSource(val internetUtil: InternetUtil) {
 
     fun getDataFromFakeNetwork(): Maybe<String> {
         /* Added 3 sec delay to mimic network call */
-        return Single.fromCallable { (internetUtil.isInternetOn()) }
+        return Single.fromCallable { (InternetUtil.isInternetOn()) }
                 .flatMapMaybe { status ->
                     if (status) {
                         Maybe.just("NumberOfNetworkCallsMade = " + ++numberOfNetworkCallsMade)
